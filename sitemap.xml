@@ -13,6 +13,16 @@
   </url>
   
   <url>
+    <loc>/spring-boot/</loc>
+    <lastmod>2019-04-07T15:46:14+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/kubernetes/helm/</loc>
+    <lastmod>2019-03-26T19:03:46+09:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/categories/</loc>
     <priority>0</priority>
   </url>
