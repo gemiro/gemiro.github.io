@@ -12,19 +12,19 @@
     <title>Helm :: 민재아빠의 스터디룸</title>
 
     
-    <link href="/css/nucleus.css?1554624357" rel="stylesheet">
-    <link href="/css/fontawesome-all.min.css?1554624357" rel="stylesheet">
-    <link href="/css/hybrid.css?1554624357" rel="stylesheet">
-    <link href="/css/featherlight.min.css?1554624357" rel="stylesheet">
-    <link href="/css/perfect-scrollbar.min.css?1554624357" rel="stylesheet">
-    <link href="/css/auto-complete.css?1554624357" rel="stylesheet">
-    <link href="/css/theme.css?1554624357" rel="stylesheet">
-    <link href="/css/hugo-theme.css?1554624357" rel="stylesheet">
+    <link href="/css/nucleus.css?1554629548" rel="stylesheet">
+    <link href="/css/fontawesome-all.min.css?1554629548" rel="stylesheet">
+    <link href="/css/hybrid.css?1554629548" rel="stylesheet">
+    <link href="/css/featherlight.min.css?1554629548" rel="stylesheet">
+    <link href="/css/perfect-scrollbar.min.css?1554629548" rel="stylesheet">
+    <link href="/css/auto-complete.css?1554629548" rel="stylesheet">
+    <link href="/css/theme.css?1554629548" rel="stylesheet">
+    <link href="/css/hugo-theme.css?1554629548" rel="stylesheet">
     
-      <link href="/css/theme-mine.css?1554624357" rel="stylesheet">
+      <link href="/css/theme-mine.css?1554629548" rel="stylesheet">
     
 
-    <script src="/js/jquery-2.x.min.js?1554624357"></script>
+    <script src="/js/jquery-2.x.min.js?1554629548"></script>
 
     <style type="text/css">
       :root #header + #content > #left > #rlblock_left{
@@ -89,14 +89,14 @@
     <span data-search-clear=""><i class="fas fa-times"></i></span>
 </div>
 
-<script type="text/javascript" src="/js/lunr.min.js?1554624357"></script>
-<script type="text/javascript" src="/js/auto-complete.js?1554624357"></script>
+<script type="text/javascript" src="/js/lunr.min.js?1554629548"></script>
+<script type="text/javascript" src="/js/auto-complete.js?1554629548"></script>
 <script type="text/javascript">
     
         var baseurl = "\/";
     
 </script>
-<script type="text/javascript" src="/js/search.js?1554624357"></script>
+<script type="text/javascript" src="/js/search.js?1554629548"></script>
 
     
   </div>
@@ -112,13 +112,13 @@
  
   
     
-    <li data-nav-id="/kubernetes/" title="KUBERNETES" class="dd-item 
+    <li data-nav-id="/kubernetes/" title="Kubernetes" class="dd-item 
         parent
         
         
         ">
       <a href="/kubernetes/">
-          KUBERNETES
+          <b>> </b>Kubernetes
           
       </a>
       
@@ -194,13 +194,13 @@
  
   
     
-    <li data-nav-id="/spring-boot/" title="SPRING BOOT" class="dd-item 
+    <li data-nav-id="/spring-boot/" title="Spring Boot" class="dd-item 
         
         
         
         ">
       <a href="/spring-boot/">
-          SPRING BOOT
+          <b>> </b>Spring Boot
           
       </a>
       
@@ -302,7 +302,7 @@
             
           
           
-            <a href='/'>Learn Theme for Hugo</a> > <a href='/kubernetes/'>KUBERNETES</a> > Helm
+            <a href='/'>Study Room of Min-Jae Papa</a> > <a href='/kubernetes/'>Kubernetes</a> > Helm
           
          
           
@@ -352,9 +352,9 @@
 <p>Kubernetes는 컨테이너 이미지를 배포하고 운영함에 있어 필요한 다양한 오케스트레이션 기능등을 지원하는 플랫폼이다.
 Kubernetes는 오케스트레이션 기능을 위해 YAML(또는 json) 파일을 사용하여 기능을 정의하고 관리한다.
 하나의 컨테이너 이미지를 배포하기 위해서는 Kubernetes에서 제공하는 다양한 기능들을 이해하고 이를 YAML 파일을 사용하여 작성할 수 있어야하는데,
-실제로 이미 잘 알려진 Mysql, MongoDB, Redis 등의 컨테이너 이미지를 docker hub 에서 내려받아
-직접 YAML 파일을 작성하여 배포를 해 보면 이 일이 그렇게 말처럼 쉽지만은 않다는 것을 알 수 있다.
-때문에 centos yum이나 ubuntu의 apt-get를 사용하면 쉽게 서비스를 설치하고 관리할 수 있는 것처럼 Kubernetes에서도 이와 비슷한 helm이라는 패키지 매니저가 나오게 되었다.</p>
+실제로 이미 잘 알려진 Mysql, MongoDB, Redis 등의 컨테이너 이미지를 사용하여
+직접 YAML 파일을 작성하여 배포해 보면 이 일이 그렇게 말처럼 쉽지 않다는 것을 알 수 있다.
+때문에 Kubernetes에서도 centos의 yum이나 ubuntu의 apt-get를 사용하면 쉽게 서비스를 설치하고 관리할 수 있는 것처럼 helm이라는 패키지 매니저가 나오게 되었다.</p>
 
 <p>helm은 Kubernetes를 위한 패키지 매니저로써 helm 명령어를 통해 쉽게 어플리케이션을 배포하고 업데이트 삭제 등을 할 수 있다.
 helm은 어플리케이션을 배포하기 위해 chart repository를 사용하는데 이 repository에는 사용자 설정에 따라 kubernetes yaml을 동적으로 생성할 수 있는 chart 들이 저장되어 있다.
@@ -479,7 +479,8 @@ helm delete my-release --purge
 
         
         </div> 
-        <div id="disqus_thread"></div>
+        
+<div id="disqus_thread"></div>
 <script type="application/javascript">
     var disqus_config = function () {
     
@@ -499,6 +500,7 @@ helm delete my-release --purge
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
 
 
       </div>
@@ -612,20 +614,20 @@ helm delete my-release --purge
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/js/clipboard.min.js?1554624357"></script>
-    <script src="/js/perfect-scrollbar.min.js?1554624357"></script>
-    <script src="/js/perfect-scrollbar.jquery.min.js?1554624357"></script>
-    <script src="/js/jquery.sticky.js?1554624357"></script>
-    <script src="/js/featherlight.min.js?1554624357"></script>
-    <script src="/js/html5shiv-printshiv.min.js?1554624357"></script>
-    <script src="/js/highlight.pack.js?1554624357"></script>
+    <script src="/js/clipboard.min.js?1554629548"></script>
+    <script src="/js/perfect-scrollbar.min.js?1554629548"></script>
+    <script src="/js/perfect-scrollbar.jquery.min.js?1554629548"></script>
+    <script src="/js/jquery.sticky.js?1554629548"></script>
+    <script src="/js/featherlight.min.js?1554629548"></script>
+    <script src="/js/html5shiv-printshiv.min.js?1554629548"></script>
+    <script src="/js/highlight.pack.js?1554629548"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/js/modernizr.custom.71422.js?1554624357"></script>
-    <script src="/js/learn.js?1554624357"></script>
-    <script src="/js/hugo-learn.js?1554624357"></script>
+    <script src="/js/modernizr.custom.71422.js?1554629548"></script>
+    <script src="/js/learn.js?1554629548"></script>
+    <script src="/js/hugo-learn.js?1554629548"></script>
 
-    <link href="/mermaid/mermaid.css?1554624357" type="text/css" rel="stylesheet" />
-    <script src="/mermaid/mermaid.js?1554624357"></script>
+    <link href="/mermaid/mermaid.css?1554629548" type="text/css" rel="stylesheet" />
+    <script src="/mermaid/mermaid.js?1554629548"></script>
     <script>
         mermaid.initialize({ startOnLoad: true });
     </script>
@@ -638,6 +640,13 @@ helm delete my-release --purge
   ga('create', 'UA-111727138-2', 'auto');
   ga('send', 'pageview');
 
+</script>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-8143479232104530",
+        enable_page_level_ads: true
+    });
 </script>
   </body>
 </html>
