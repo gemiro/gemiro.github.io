@@ -9,7 +9,7 @@
 
     <link rel="icon" href="/images/favicon.png" type="image/png">
 
-    <title>The Study Room of Min-Jae Papa :: 민재아빠의 스터디룸</title>
+    <title>MetalLB 설치 및 사용 :: 민재아빠의 스터디룸</title>
 
     
     <link href="/css/nucleus.css?1554736720" rel="stylesheet">
@@ -41,7 +41,7 @@
     });
 </script>
   </head>
-  <body class="" data-url="/">
+  <body class="" data-url="/kubernetes/applications/metallb/">
     <nav id="sidebar" class="">
 
 
@@ -120,7 +120,7 @@
   
     
     <li data-nav-id="/kubernetes/" title="Kubernetes" class="dd-item 
-        
+        parent
         
         
         ">
@@ -195,7 +195,7 @@
   
     
     <li data-nav-id="/kubernetes/applications/" title="Applications" class="dd-item 
-        
+        parent
         
         
         ">
@@ -222,8 +222,8 @@
   
     
     <li data-nav-id="/kubernetes/applications/metallb/" title="MetalLB 설치 및 사용" class="dd-item 
-        
-        
+        parent
+        active
         
         ">
       <a href="/kubernetes/applications/metallb/">
@@ -318,35 +318,218 @@
         <div id="overlay"></div>
         <div class="padding highlightable">
               
+              <div>
+                <div id="top-bar">
+                
+                  
+                  
+                  
+                  <div id="top-github-link">
+                    <a class="github-link" title='' href="https://github.com/gemiro/blog/edit/master/content/kubernetes/applications/metallb/_index.md" target="blank">
+                      <i class="fas fa-code-branch"></i>
+                      <span id="top-github-link-text"></span>
+                    </a>
+                  </div>
+                  
+                
+                
+                <div id="breadcrumbs" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                    <span id="sidebar-toggle-span">
+                        <a href="#" id="sidebar-toggle" data-sidebar-toggle="">
+                          <i class="fas fa-bars"></i>
+                        </a>
+                    </span>
+                  
+                  <span id="toc-menu"><i class="fas fa-list-alt"></i></span>
+                  
+                  <span class="links">
+                 
+                 
+                    
+          
+          
+            
+            
+          
+          
+            
+            
+          
+          
+            
+            
+          
+          
+            <a href='/'>The Study Room of Min-Jae Papa</a> > <a href='/kubernetes/'>Kubernetes</a> > <a href='/kubernetes/applications/'>Applications</a> > MetalLB 설치 및 사용
+          
+         
+          
+         
+          
+         
+          
+        
+                 
+                  </span>
+                </div>
+                
+                    <div class="progress">
+    <div class="wrapper">
+<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#소개">소개</a></li>
+<li><a href="#사전-준비">사전 준비</a></li>
+<li><a href="#설치">설치</a></li>
+<li><a href="#테스트">테스트</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+    </div>
+</div>
+
+                
+              </div>
+            </div>
+            
 
         
         <div id="body-inner">
           
+            <h1>MetalLB 설치 및 사용</h1>
+          
 
         
 
-<span id="sidebar-toggle-span">
-<a href="#" id="sidebar-toggle" data-sidebar-toggle=""><i class="fas fa-bars"></i> navigation</a>
-</span>
-
- 
 
 
-<h1 id="민재아빠의-스터디룸">민재아빠의 스터디룸</h1>
+<div style="text-align:right">
+	 <i class='fas fa-calendar'></i> 2019/04/08
+</div>
 
-<h4 id="kubernetes">&gt; Kubernetes</h4>
+
+
+<h3 id="소개">소개</h3>
+
+<p><a href="https://metallb.universe.tf/">MetalLB</a>는 bare metal Kubernetes를 위한 Load-balancer 구현체이다. Kubernetes를 설치하고 어플리케이션을 배포하고 외부로 어플리케이션을 노출 시키기 위해서는
+<a href="https://kubernetes.io/docs/concepts/services-networking/service/">Service</a>를 사용하게 된다. 이때 <strong>Service</strong>의 ServiceType을 선택할 수 있는데 ClusterIP(default),
+<a href="https://kubernetes.io/docs/concepts/services-networking/service/#nodeport">NodePort</a>,
+<a href="https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer">LoadBalancer</a>,
+<a href="https://kubernetes.io/docs/concepts/services-networking/service/#externalname">ExternalName</a>이 있다.</p>
+
+<p>bare metal Kubernetes ServiceType을 <strong>LoadBalancer</strong>로 선택하여 배포를 하면 Service의 <strong>EXTERNAL-IP</strong> 부분이 <strong>Pending</strong> 상태로 머물고 IP가 할당되지 않는다.
+<strong>MetalLB</strong>는 bare metal Kubernetes에서 ServiceType이 LoadBalancer 일 경우 EXTERNAL-IP를 할당해 주는 역할을 한다.</p>
+
+<h3 id="사전-준비">사전 준비</h3>
 
 <ul>
 <li><a href="/kubernetes/installation/">쿠버네티스 설치하기</a></li>
-<li><a href="/kubernetes/helm/">Helm</a></li>
+<li>할당 할 IP 대역 마련(예: 공유기 Network 대역)</li>
 </ul>
 
-<h4 id="spring-boot">&gt; Spring Boot</h4>
-	
-  
+<h3 id="설치">설치</h3>
+
+<p><a href="https://metallb.universe.tf/">MetalLB</a>에서 Tutorial을 참조하면 BGP on Minukube와 Layer 2 mode tutorial 두 가지 방식을 설명하고 있다.
+ 본 문에서는 Layer 2 mode 방식으로 설치 및 사용법을 보인다.</p>
+
+<p>MetalLB에서 설치 두 가지 설치 방법을 보이는데
+1. 아래 명령어를 통해 manifest를 적용하여 MetalLB를 설치하는 방법<br />
+<code>kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.7.3/manifests/tutorial-2.yaml</code></p>
+
+<ol>
+<li>helm을 사용하여 설치하는 방법을 알려주고 있다.
+<code>helm install --name metallb stable/metallb</code></li>
+</ol>
+
+<p>가장 쉬운 방법은 helm을 사용하여 설치하는 방법이 가장 쉽기 때문에 본 문에서는 helm을 사용하여 설치한다.</p>
+
+<p><a href="https://github.com/helm/charts/tree/master/stable/metallb">metallb helm chart git hub</a>에 접속하면 values.yaml이 있다.
+해당 파일을 master 노드 home 폴더에 복사한다.</p>
+
+<pre><code class="language-bash">mkdir metallb
+cd metallb
+wget https://raw.githubusercontent.com/helm/charts/master/stable/metallb/values.yaml
+</code></pre>
+
+<p>그리고 values.yaml을 수정하는데 아래와 같이 address-pools 부분의 주석을 해제하고
+Network 대역 중 할당할 범위를 addresses 부분과 같이 표시한다.</p>
+
+<pre><code class="language-yaml">...
+# available options.
+configInline:
+    # Example ARP Configuration
+     address-pools:
+     - name: default
+       protocol: layer2
+       addresses:
+       - 192.168.1.200-192.168.1.250
+...    
+</code></pre>
+
+<p>value.yaml을 수정하고 저장한 이후 아래 명령어를 통해 설치를 진행한다.
+<code>helm install --name metallb --namespace metallb-system -f values.yaml stable/metallb</code></p>
+
+<p>설치 이후 아래 명령어를 통해 설치 결과를 확인하면, 아래와 같이
+한 개의 controller와 slave 노드 개수 만큼의 speaker가 생성된 것을 알 수 있다.</p>
+
+<pre><code class="language-bash">kubectl get pods -n metallb-system
+# NAME                                  READY   STATUS    RESTARTS   AGE
+# metallb-controller-776cdd69dc-drhgp   1/1     Running   1          1d
+# metallb-speaker-ftb4n                 1/1     Running   1          1d
+# metallb-speaker-lgqtj                 1/1     Running   1          1d
+</code></pre>
+
+<h3 id="테스트">테스트</h3>
+
+<p>본 문에서는 간단하게 <a href="https://metallb.universe.tf/tutorial/layer2/">MetalLB</a>에서 제공하는 nginx yaml을 사용하여 LoadBalancer가 적용된 manifest를 적용해 본다.</p>
+
+<p><code>kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.7.3/manifests/tutorial-2.yaml</code></p>
+
+<p>pod 가 정상적으로 배포 된 것을 알 수 있다.</p>
+
+<pre><code class="language-bash">kubectl get po
+# NAME                     READY   STATUS    RESTARTS   AGE
+# nginx-5cd9c7f879-vmzkz   1/1     Running   0          20s
+</code></pre>
+
+<p>service의 경우 EXTERNAL-IP부분이 위에서 설정한 Pool 범위에서 할당 되는 것을 알 수 있다.</p>
+
+<pre><code class="language-bash">kubectl get svc
+# NAME    TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)        AGE
+# nginx   LoadBalancer   10.106.212.89   192.168.1.203   80:31342/TCP   50s
+</code></pre>
+
+<p>같은 네트워크 대역에 있는 PC에서 브라우저를 열고 <a href="http://192.168.1.203으로">http://192.168.1.203으로</a> 접속을 해보면 <strong>Welcome to nginx!</strong> 라는 구문을 볼 수 있다.</p>
+
+
         
         </div> 
         
+<div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "gemiro" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
 
 
       </div>
@@ -376,8 +559,6 @@
             
                 
                     
-                        
-                        
                     
                 
                 
@@ -393,6 +574,9 @@
             
             
                 
+                    
+                        
+                        
                     
                 
                 
@@ -426,6 +610,7 @@
             
                 
                     
+                    
                 
                 
 
@@ -440,6 +625,7 @@
             
             
                 
+                    
                     
                 
                 
@@ -462,6 +648,9 @@
             
             
                 
+                    
+                        
+                        
                     
                 
                 
@@ -518,4 +707,3 @@
 </script>
   </body>
 </html>
-
