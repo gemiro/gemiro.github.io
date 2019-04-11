@@ -17,6 +17,11 @@
   </url>
   
   <url>
+    <loc>/kubernetes/applications/nfs-provider/</loc>
+    <lastmod>2019-04-11T22:54:31+09:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/kubernetes/helm/</loc>
     <lastmod>2019-03-26T19:03:46+09:00</lastmod>
   </url>
