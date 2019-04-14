@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="ko" class="js csstransforms3d">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="Hugo 0.54.0" />
+    <meta name="description" content="The study room of Min-Jae papa">
+<meta name="author" content="Min-Jae papa">
+
+    <link rel="icon" href="/images/favicon.png" type="image/png">
+
+    <title>Kubernetes NFS Dynamic Provisioner 구축 :: The Study Room of Min-Jae Papa</title>
+
+    
+    <link href="/css/nucleus.css?1555242743" rel="stylesheet">
+    <link href="/css/fontawesome-all.min.css?1555242743" rel="stylesheet">
+    <link href="/css/hybrid.css?1555242743" rel="stylesheet">
+    <link href="/css/featherlight.min.css?1555242743" rel="stylesheet">
+    <link href="/css/perfect-scrollbar.min.css?1555242743" rel="stylesheet">
+    <link href="/css/auto-complete.css?1555242743" rel="stylesheet">
+    <link href="/css/theme.css?1555242743" rel="stylesheet">
+    <link href="/css/hugo-theme.css?1555242743" rel="stylesheet">
+    
+      <link href="/css/theme-mine.css?1555242743" rel="stylesheet">
+    
+
+    <script src="/js/jquery-2.x.min.js?1555242743"></script>
+
+    <style type="text/css">
+      :root #header + #content > #left > #rlblock_left{
+          display:none !important;
+      }
+      
+    </style>
+    
+  </head>
+  <body class="" data-url="/kubernetes/applications/nfs-provider/">
+    <nav id="sidebar" class="">
+
+
+
+  <div id="header-wrapper">
+    <div id="header">
+      <a id="logo" href="/">
+
+<svg id="grav-logo" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+	width="100%" height="100%"  viewBox="0 0 285.1 69.9" xml:space="preserve">
+<g>
+	<path d="M35,0c9.6,0,17.9,3.4,24.7,10.3c6.8,6.8,10.3,15,10.3,24.7c0,9.7-3.4,17.9-10.3,24.7c-6.8,6.8-15,10.3-24.7,10.3
+		c-9.7,0-17.9-3.4-24.7-10.3C3.4,52.8,0,44.6,0,34.9c0-9.6,3.4-17.9,10.3-24.7C17.1,3.4,25.3,0,35,0z M22.3,63.7
+		c0.3-7.4,0.3-14.7,0-22.1c-2.1-0.4-4-0.4-5.9,0c-0.2,0.8-0.2,2.5-0.1,4.9c0.1,2.3,0,3.9-0.3,4.8c-1.7-0.6-2.7-2.1-3.1-4.6
+		c-0.1-0.7-0.1-3.3-0.1-8c0-14.5-0.1-23-0.3-25.6c-3.6,4.1-5.6,7-5.9,8.5v10.9c0,4.5,0.1,8.1,0.2,10.9c0,0.4,0,1.3-0.1,2.8
+		c-0.1,1.2,0,2.1,0.1,2.6c0.1,0.6,1.1,2.1,2.8,4.7C13.2,58.7,17.5,62.2,22.3,63.7z M44.6,65.4c0.3-5,0.2-12.9-0.1-23.6
+		c-2.1-0.3-4.1-0.3-5.9,0c-0.2,2-0.2,5.1-0.1,9.5c0.1,4.3,0,7.5-0.1,9.5c-2.9,0.4-5,0.3-6.2-0.1c-0.2-5.6-0.2-15.2-0.1-28.7
+		c0.1-12.4,0-21.8-0.3-28.3c-2.4,0.1-4.3,0.6-5.7,1.3c-0.1,7.7-0.2,17.7-0.1,30.1c0,16.5,0,26.6,0,30.3c2.3,1.1,5.4,1.7,9.4,1.7
+		C38.9,66.9,42.1,66.4,44.6,65.4z M48.1,64.1c9.7-4.6,15.7-12,18-22.2c-1.8-0.2-3.8-0.3-6.1-0.3c-1.6,3.9-2.6,6.3-3.2,7.2
+		c-1.1,1.7-2,2.5-2.7,2.5C54,46,54,39.1,54,30.5c0-11.5,0-18.4,0-20.9c-1.4-1.4-3.3-2.5-5.7-3.4C48.1,6.3,48,6.4,48,6.7
+		c0,3.5,0,13.1,0,28.8C47.9,47.2,48,56.8,48.1,64.1z"/>
+</g>
+<g>
+	<path d="M116.6,51.3h-29c-0.5,0-0.9-0.1-1.3-0.2c-0.4-0.2-0.7-0.4-1-0.7c-0.3-0.3-0.5-0.6-0.7-1c-0.2-0.4-0.2-0.8-0.2-1.3V16.3h6.3
+		V45h25.8V51.3z"/>
+	<path d="M154.8,51.3h-22.9c-0.9,0-1.8-0.2-2.9-0.5c-1-0.3-2-0.8-2.9-1.5c-0.9-0.7-1.6-1.6-2.2-2.8c-0.6-1.1-0.9-2.5-0.9-4.2V19.5
+		c0-0.4,0.1-0.9,0.2-1.2c0.2-0.4,0.4-0.7,0.7-1c0.3-0.3,0.6-0.5,1-0.7c0.4-0.2,0.8-0.2,1.3-0.2h28.6v6.3h-25.4v19.8
+		c0,0.8,0.2,1.5,0.7,1.9s1.1,0.7,1.9,0.7h22.9V51.3z M151.9,37h-20v-6.4h20V37z"/>
+	<path d="M197.3,51.3H191v-8.6h-22.3v8.6h-6.3V33.8c0-2.6,0.4-4.9,1.3-7.1s2.1-4,3.7-5.5c1.6-1.5,3.4-2.8,5.5-3.6
+		c2.1-0.9,4.5-1.3,7-1.3h14.3c0.4,0,0.9,0.1,1.2,0.2c0.4,0.2,0.7,0.4,1,0.7s0.5,0.6,0.7,1c0.2,0.4,0.2,0.8,0.2,1.2V51.3z
+		 M168.7,36.4H191V22.6h-11.2c-0.2,0-0.6,0-1.2,0.1c-0.6,0.1-1.4,0.2-2.2,0.4c-0.8,0.2-1.7,0.6-2.6,1c-0.9,0.5-1.8,1.1-2.5,2
+		c-0.8,0.8-1.4,1.9-1.9,3.1c-0.5,1.2-0.7,2.8-0.7,4.5V36.4z"/>
+	<path d="M241.7,28.1c0,1.4-0.2,2.7-0.5,3.9c-0.4,1.1-0.8,2.1-1.5,3c-0.6,0.9-1.3,1.6-2.1,2.2c-0.8,0.6-1.6,1.1-2.5,1.5
+		c-0.9,0.4-1.8,0.7-2.6,0.9c-0.9,0.2-1.7,0.3-2.5,0.3l13.3,11.5h-9.8l-13.2-11.5h-4.6v-6.3H230c0.8-0.1,1.5-0.2,2.2-0.5
+		c0.7-0.3,1.2-0.6,1.7-1.1c0.5-0.5,0.9-1,1.1-1.6c0.3-0.6,0.4-1.4,0.4-2.2v-4c0-0.4,0-0.6-0.1-0.8c-0.1-0.2-0.2-0.3-0.3-0.4
+		c-0.1-0.1-0.3-0.1-0.4-0.2c-0.2,0-0.3,0-0.4,0h-20.9v28.7h-6.3V19.5c0-0.4,0.1-0.9,0.2-1.2c0.2-0.4,0.4-0.7,0.7-1
+		c0.3-0.3,0.6-0.5,1-0.7c0.4-0.2,0.8-0.2,1.3-0.2H234c1.4,0,2.6,0.3,3.6,0.8s1.8,1.2,2.4,1.9c0.6,0.8,1,1.6,1.3,2.5
+		c0.3,0.9,0.4,1.7,0.4,2.5V28.1z"/>
+	<path d="M285.1,48.6c0,0.5-0.1,0.9-0.3,1.3c-0.2,0.4-0.4,0.7-0.7,1c-0.3,0.3-0.6,0.5-1,0.7c-0.4,0.2-0.8,0.2-1.2,0.2
+		c-0.4,0-0.8-0.1-1.2-0.2c-0.4-0.1-0.8-0.4-1.1-0.7l-23.2-24.2v24.7h-6.3V19c0-0.7,0.2-1.2,0.5-1.8c0.4-0.5,0.8-0.9,1.4-1.2
+		c0.6-0.2,1.2-0.3,1.9-0.2s1.2,0.4,1.6,0.9l23.2,24.2V16.3h6.3V48.6z"/>
+</g>
+</svg>
+
+</a>
+
+    </div>
+    
+        <div class="searchbox">
+    <label for="search-by"><i class="fas fa-search"></i></label>
+    <input data-search-input id="search-by" type="search" placeholder="">
+    <span data-search-clear=""><i class="fas fa-times"></i></span>
+</div>
+
+<script type="text/javascript" src="/js/lunr.min.js?1555242743"></script>
+<script type="text/javascript" src="/js/auto-complete.js?1555242743"></script>
+<script type="text/javascript">
+    
+        var baseurl = "\/";
+    
+</script>
+<script type="text/javascript" src="/js/search.js?1555242743"></script>
+
+    
+  </div>
+
+    <div class="highlightable">
+    <ul class="topics">
+
+        
+          
+          
+
+
+ 
+  
+    
+    <li data-nav-id="/kubernetes/" title="Kubernetes" class="dd-item 
+        parent
+        
+        
+        ">
+      <a href="/kubernetes/">
+          <b>> </b>Kubernetes
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+            
+          
+          
+          
+        
+          
+            
+            
+
+
+ 
+  
+    
+    <li data-nav-id="/kubernetes/installation/" title="Centos7에 쿠버네티스 설치하기" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/kubernetes/installation/">
+          Centos7에 쿠버네티스 설치하기
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
+    <li data-nav-id="/kubernetes/helm/" title="Helm 설치 및 사용" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/kubernetes/helm/">
+          Helm 설치 및 사용
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
+    <li data-nav-id="/kubernetes/applications/" title="어플리케이션(Helm)" class="dd-item 
+        parent
+        
+        
+        ">
+      <a href="/kubernetes/applications/">
+          어플리케이션(Helm)
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+            
+          
+          
+          
+        
+          
+            
+            
+
+
+ 
+  
+    
+    <li data-nav-id="/kubernetes/applications/metallb/" title="Kubernetes LoadBalancer, MetalLB" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/kubernetes/applications/metallb/">
+          Kubernetes LoadBalancer, MetalLB
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
+    <li data-nav-id="/kubernetes/applications/nfs-provider/" title="Kubernetes NFS Dynamic Provisioner 구축" class="dd-item 
+        parent
+        active
+        
+        ">
+      <a href="/kubernetes/applications/nfs-provider/">
+          Kubernetes NFS Dynamic Provisioner 구축
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+ 
+  
+    
+    <li data-nav-id="/spinnaker/" title="Spinnaker" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/spinnaker/">
+          <b>> </b>Spinnaker
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+            
+          
+          
+          
+        
+          
+            
+            
+
+
+ 
+  
+    
+    <li data-nav-id="/spinnaker/installation/" title="Installations" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/spinnaker/installation/">
+          Installations
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+ 
+  
+    
+    <li data-nav-id="/spring-boot/" title="Spring Boot" class="dd-item 
+        
+        
+        
+        ">
+      <a href="/spring-boot/">
+          <b>> </b>Spring Boot
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+          
+         
+    </ul>
+
+    
+    
+      <section id="shortcuts">
+        <h3></h3>
+        <ul>
+          
+              <li> 
+                  <a class="padding" href="https://github.com/matcornic/hugo-theme-learn"><i class='fab fa-fw fa-github'></i> Github repo</a>
+              </li>
+          
+              <li> 
+                  <a class="padding" href="https://learn.netlify.com/en/"><i class='fas fa-fw fa-bookmark'></i> Learn Documentation</a>
+              </li>
+          
+        </ul>
+      </section>
+    
+
+    
+    <section id="footer">
+      <div>
+    <p>Built <a href="https://github.com/matcornic/hugo-theme-learn"></a> from <a href="https://getgrav.org">Grav</a> and <a href="https://gohugo.io/">Hugo</a></p>
+</div>
+
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+    </section>
+  </div>
+</nav>
+
+
+
+
+
+        <section id="body">
+        <div id="overlay"></div>
+        <div class="padding highlightable">
+              
+              <div>
+                <div id="top-bar">
+                
+                  
+                  
+                  
+                  <div id="top-github-link">
+                    <a class="github-link" title='' href="https://github.com/gemiro/blog/edit/master/content/kubernetes/applications/nfs-provider/_index.md" target="blank">
+                      <i class="fas fa-code-branch"></i>
+                      <span id="top-github-link-text"></span>
+                    </a>
+                  </div>
+                  
+                
+                
+                <div id="breadcrumbs" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                    <span id="sidebar-toggle-span">
+                        <a href="#" id="sidebar-toggle" data-sidebar-toggle="">
+                          <i class="fas fa-bars"></i>
+                        </a>
+                    </span>
+                  
+                  <span id="toc-menu"><i class="fas fa-list-alt"></i></span>
+                  
+                  <span class="links">
+                 
+                 
+                    
+          
+          
+            
+            
+          
+          
+            
+            
+          
+          
+            
+            
+          
+          
+            <a href='/'>The Study Room of Min-Jae Papa</a> > <a href='/kubernetes/'>Kubernetes</a> > <a href='/kubernetes/applications/'>어플리케이션(Helm)</a> > Kubernetes NFS Dynamic Provisioner 구축
+          
+         
+          
+         
+          
+         
+          
+        
+                 
+                  </span>
+                </div>
+                
+                    <div class="progress">
+    <div class="wrapper">
+<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#소개">소개</a></li>
+<li><a href="#사전-준비">사전 준비</a></li>
+<li><a href="#설치">설치</a></li>
+<li><a href="#실행">실행</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+    </div>
+</div>
+
+                
+              </div>
+            </div>
+            
+
+        
+        <div id="body-inner">
+          
+            <h1>Kubernetes NFS Dynamic Provisioner 구축</h1>
+          
+
+        
+
+
+
+<div style="text-align:right">
+	 <i class='fas fa-calendar'></i> 2019/04/11
+</div>
+
+
+
+<h3 id="소개">소개</h3>
+
+<p>하나의 컨테이너에 구성된 파일은 컨테이너 수명 주기를 따른다. 때문에 컨테이너가 죽고 삭제가 되면 컨테이너 내의 파일도 함께 삭제가 된다.
+이는 State 정보를 보유하는 컨테이너가 운영중 문제가 발생하여 죽게되어 kubelet이 리스타트를 하게 된다면 데이터도 함께 손실된다는 것을 의미한다.
+그리고 컨테이너 내의 파일은 기본적으로 컨테이너 내부에서만 사용이 가능하고
+외부 컨테이너와 데이터를 공유 할 수 없다는 문제가 있다. Docker에서는 이를 해결하기 위해 volume 이라는 옵션으로 외부 파일 영역을 붙일 수 있다.
+Kubernetes에서도 똑 같이 Volume 이라는 추상화를 통해 위와 같은 문제들을 해결하고 있다.
+Kubernetes에서는 다음과 다양한 Volume 타입을 지원하고 있다. <a href="https://kubernetes.io/docs/concepts/storage/volumes/#types-of-volumes">Types of Volumes</a></p>
+
+<p>지원 되는 Volume 타입들을 보면 몇몇 Volume들은 퍼블릭 클라우드에서 제공되는 Volume으로 프라이빗 클라우드의 경우 사용이 불가능하다.
+프라이빗 클라우드의 경우 사용할 수 있는 대표적인 Volume으로 <a href="https://kubernetes.io/docs/concepts/storage/volumes/#cephfs">chphfs</a>,
+<a href="https://kubernetes.io/docs/concepts/storage/volumes/#cinder">cinder</a>, <a href="https://kubernetes.io/docs/concepts/storage/volumes/#iscsi">iscsi</a>,
+<a href="https://kubernetes.io/docs/concepts/storage/volumes/#nfs">nfs</a> 등이 있다.</p>
+
+<p>본 문서에서는 비교적 간단한 nfs를 사용하여 Volume을 구축해 본다.
+그리고 <a href="https://kubernetes.io/docs/concepts/storage/dynamic-provisioning/#using-dynamic-provisioning">Dynamic Provisioning</a>을 통해
+관리자 없이도 사용자 요구에 따라 자동으로 스토리지를 프로비저닝 해주는 기능까지 구축한다.</p>
+
+<h3 id="사전-준비">사전 준비</h3>
+
+<ul>
+<li><a href="/kubernetes/installation/">쿠버네티스 설치하기</a></li>
+<li><a href="/kubernetes/helm/">Helm 설치 및 사용</a></li>
+<li>NFS 서버를 위한 PC</li>
+</ul>
+
+<h3 id="설치">설치</h3>
+
+<p>NFS가 설치되어 있는 리눅스 서버가 있다면 아래 설치 부분을 Skip 한다.
+만약 설치되어 있지 않다면 아래 과정을 통해 nfs 서버를 구축한다.</p>
+
+<pre><code class="language-bash"># nfs 서버 설치
+yum install nfs-utils nfs-utils-lib
+
+# nfs 스토리지 영역을 제공할 마운팅 지정
+mkdir -p /nfs/data
+
+# nfs에 접속하는 사용자에대한 권한 설정
+# Read,write 권한, 데이터 sync, root 권한을 요구하지 않도록 설정
+cat &lt;&lt;EOF &gt; /etc/exports
+/nfs/data *(rw,sync,no_root_squash)  
+EOF
+
+# 방화벽이 disable 되어 있는지 확인
+systemctl list-unit-files | grep fire
+# firewalld.service                             disabled
+
+# nfs 재시작
+systemctl enable nfs
+systemctl restart nfs
+
+# 적용 확인
+exportfs -v
+/nfs/data       &lt;world&gt;(sync,wdelay,hide,no_subtree_check,sec=sys,rw,secure,no_root_squash,no_all_squash)
+</code></pre>
+
+<p>helm 차트 중 <a href="https://github.com/helm/charts/tree/master/stable/nfs-client-provisioner">nfs-client-provisioner</a> 차트를 사용하면
+<a href="https://kubernetes.io/docs/concepts/storage/dynamic-provisioning/#using-dynamic-provisioning">Dynamic Provisioning</a>을 바로 구축이 가능하다.</p>
+
+<p>nfs.server 부분에 nfs 서버 주소를 기입하고 아래 명령어를 통해 nfs-client-provisioner를 구축한다.</p>
+
+<p><code>helm install --name nfs --set nfs.server=x.x.x.x,nfs.path=/nfs/data stable/nfs-client-provisioner</code></p>
+
+<p>구축 이후 <code>helm status nfs</code> 명령어를 통해 구축 결과를 확인할 수 있다. 아래 내용중 StorageClass 부분을 통해 사용자는
+YAML파일에 볼륨 부분에 StorageClass를 nfs-client를 주게 되면 자동으로 PersistentVolume과 PersistentVolumeClaim 이 생성된다.</p>
+
+<pre><code class="language-bash">helm status nfs
+# LAST DEPLOYED: Sat Mar 16 17:35:06 2019
+# NAMESPACE: default
+# STATUS: DEPLOYED
+# 
+# RESOURCES:
+# ==&gt; v1/ClusterRole
+# NAME                               AGE
+# nfs-nfs-client-provisioner-runner  26d
+# 
+# ==&gt; v1/ClusterRoleBinding
+# NAME                            AGE
+# run-nfs-nfs-client-provisioner  26d
+# 
+# ==&gt; v1/Deployment
+# NAME                        READY  UP-TO-DATE  AVAILABLE  AGE
+# nfs-nfs-client-provisioner  1/1    1           1          26d
+# 
+# ==&gt; v1/Pod(related)
+# NAME                                        READY  STATUS   RESTARTS  AGE
+# nfs-nfs-client-provisioner-57588997f-7c78l  1/1    Running  0         26d
+# 
+# ==&gt; v1/Role
+# NAME                                       AGE
+# leader-locking-nfs-nfs-client-provisioner  26d
+# 
+# ==&gt; v1/RoleBinding
+# NAME                                       AGE
+# leader-locking-nfs-nfs-client-provisioner  26d
+# 
+# ==&gt; v1/ServiceAccount
+# NAME                        SECRETS  AGE
+# nfs-nfs-client-provisioner  1        26d
+# 
+# ==&gt; v1/StorageClass
+# NAME        PROVISIONER                               AGE
+# nfs-client  cluster.local/nfs-nfs-client-provisioner  26d
+</code></pre>
+
+<h3 id="실행">실행</h3>
+
+<p>nfs-client-provisioner이 구축이 되었다면 이제 PersistentVolumeClaim에 storageClassName을 지정하면 수동으로 PersistentVolume 구축 없이도 자동으로 지정된 볼륨이 생성할 수 있다.
+간단하게 테스트 해보기 위해 PersistentVolumeClaim에 yaml 파일을 작성하고 <code>kubectl create</code> 명령으로 pvc를 생성해본다.</p>
+
+<pre><code class="language-bash">cat &lt;&lt;EOF &gt; ./pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: claim1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: nfs-client
+  resources:
+    requests:
+      storage: 1Gi
+EOF
+
+kubectl create -f pvc.yaml
+</code></pre>
+
+<p>끝으로 PersistentVolumeClaim과 자동으로 생성된 PersistentVolume을 확인한다.</p>
+
+<pre><code class="language-bash">kubectl get pvc
+NAME     STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+claim1   Bound    pvc-5e0ac82f-5c6b-11e9-b099-b4b686df06b0   1Gi        RWO            nfs-client     4s
+
+kubectl get pv
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM            STORAGECLASS   REASON   AGE
+pvc-5e0ac82f-5c6b-11e9-b099-b4b686df06b0   1Gi        RWO            Delete           Bound    default/claim1   nfs-client              10s
+</code></pre>
+
+<p><code>kubectl get pv</code>를 통해 나온 결과 처럼 PersistentVolumeClaim만 생성하였는데 자동으로 이에 해당하는 PersistentVolume이 생성된 것을 알 수 있다.</p>
+
+
+        
+        </div> 
+        
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "gemiro" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+      </div>
+
+    <div id="navigation">
+        
+        
+        
+        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+        
+        
+
+
+	 
+	 
+    </div>
+
+    </section>
+    
+    <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
+      <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
+    </div>
+    <script src="/js/clipboard.min.js?1555242743"></script>
+    <script src="/js/perfect-scrollbar.min.js?1555242743"></script>
+    <script src="/js/perfect-scrollbar.jquery.min.js?1555242743"></script>
+    <script src="/js/jquery.sticky.js?1555242743"></script>
+    <script src="/js/featherlight.min.js?1555242743"></script>
+    <script src="/js/html5shiv-printshiv.min.js?1555242743"></script>
+    <script src="/js/highlight.pack.js?1555242743"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script src="/js/modernizr.custom.71422.js?1555242743"></script>
+    <script src="/js/learn.js?1555242743"></script>
+    <script src="/js/hugo-learn.js?1555242743"></script>
+
+    <link href="/mermaid/mermaid.css?1555242743" type="text/css" rel="stylesheet" />
+    <script src="/mermaid/mermaid.js?1555242743"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-137851652-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+</html>
