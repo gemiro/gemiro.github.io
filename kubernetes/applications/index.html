@@ -9,7 +9,7 @@
 
     <link rel="icon" href="/images/favicon.png" type="image/png">
 
-    <title>Minio 분산 오브젝트 스토리지 구축 :: The Study Room of Min-Jae Papa</title>
+    <title>어플리케이션(Helm) :: The Study Room of Min-Jae Papa</title>
 
     
     <link href="/css/nucleus.css?1555243129" rel="stylesheet">
@@ -34,7 +34,7 @@
     </style>
     
   </head>
-  <body class="" data-url="/kubernetes/applications/minio/">
+  <body class="" data-url="/kubernetes/applications/">
     <nav id="sidebar" class="">
 
 
@@ -189,7 +189,7 @@
     
     <li data-nav-id="/kubernetes/applications/" title="어플리케이션(Helm)" class="dd-item 
         parent
-        
+        active
         
         ">
       <a href="/kubernetes/applications/">
@@ -263,8 +263,8 @@
   
     
     <li data-nav-id="/kubernetes/applications/minio/" title="Minio 분산 오브젝트 스토리지 구축" class="dd-item 
-        parent
-        active
+        
+        
         
         ">
       <a href="/kubernetes/applications/minio/">
@@ -424,7 +424,7 @@
                   
                   
                   <div id="top-github-link">
-                    <a class="github-link" title='' href="https://github.com/gemiro/blog/edit/master/content/kubernetes/applications/minio/_index.md" target="blank">
+                    <a class="github-link" title='' href="https://github.com/gemiro/blog/edit/master/content/kubernetes/applications/_index.md" target="blank">
                       <i class="fas fa-code-branch"></i>
                       <span id="top-github-link-text"></span>
                     </a>
@@ -438,8 +438,6 @@
                           <i class="fas fa-bars"></i>
                         </a>
                     </span>
-                  
-                  <span id="toc-menu"><i class="fas fa-list-alt"></i></span>
                   
                   <span class="links">
                  
@@ -455,13 +453,7 @@
             
           
           
-            
-            
-          
-          
-            <a href='/'>The Study Room of Min-Jae Papa</a> > <a href='/kubernetes/'>Kubernetes</a> > <a href='/kubernetes/applications/'>어플리케이션(Helm)</a> > Minio 분산 오브젝트 스토리지 구축
-          
-         
+            <a href='/'>The Study Room of Min-Jae Papa</a> > <a href='/kubernetes/'>Kubernetes</a> > 어플리케이션(Helm)
           
          
           
@@ -472,128 +464,120 @@
                   </span>
                 </div>
                 
-                    <div class="progress">
-    <div class="wrapper">
-<nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#소개">소개</a></li>
-<li><a href="#사전-준비">사전 준비</a></li>
-<li><a href="#설치">설치</a></li>
-<li><a href="#실행">실행</a></li>
-</ul></li>
-</ul></li>
-</ul>
-</nav>
-    </div>
-</div>
-
-                
               </div>
             </div>
             
 
         
+          <div id="chapter">
+        
         <div id="body-inner">
-          
-            <h1>Minio 분산 오브젝트 스토리지 구축</h1>
           
 
         
 
 
 
-<div style="text-align:right">
-	 <i class='fas fa-calendar'></i> 2019/04/12
-</div>
+
+
+<h1 id="applications">Applications</h1>
+
+<h3 id="contents">Contents</h3>
 
 
 
-<h3 id="소개">소개</h3>
 
-<p><a href="https://min.io/">Minio</a>는 자신의 호스트에 직접 구축이 가능한 S3-compatible 오브젝트 스토리지이다.
-S3의 특징인 버저닝 기능등 몇몇 기능을 제외한 많은 부분의 S3 API를 Minio가 지원하고 있다.
-따라서 Minio API로 구성한 서비스들은 AWS의 S3와 잘 호환된다고 할 수 있다.</p>
 
-<h3 id="사전-준비">사전 준비</h3>
 
-<ul>
-<li><a href="/kubernetes/installation/">쿠버네티스 설치하기</a></li>
-<li><a href="/kubernetes/helm/">Helm 설치 및 사용</a></li>
-<li><a href="/kubernetes/applications/nfs-provider/">Kubernetes NFS Dynamic Provisioner 구축</a></li>
+
+
+<ul class="children children-li">
+	
+    
+	    
+    
+    
+
+	
+		
+	
+		
+  
+
+
+<li>
+<a href="/kubernetes/applications/metallb/" >Kubernetes LoadBalancer, MetalLB</a>
+</li>
+
+
+
+
+
+
+			
+		
+
+		
+			
+
+		
+	
+		
+  
+
+
+<li>
+<a href="/kubernetes/applications/nfs-provider/" >Kubernetes NFS Dynamic Provisioner 구축</a>
+</li>
+
+
+
+
+
+
+			
+		
+
+		
+			
+
+		
+	
+		
+  
+
+
+<li>
+<a href="/kubernetes/applications/minio/" >Minio 분산 오브젝트 스토리지 구축</a>
+</li>
+
+
+
+
+
+
+			
+		
+
+		
+			
+
+		
+	
+
+	
 </ul>
 
-<h3 id="설치">설치</h3>
-
-<p><a href="https://github.com/helm/charts/tree/master/stable/minio">Minio helm chart</a>에서 values.yaml을 다음 명령어로 복사한다.</p>
-
-<p><code>wget https://raw.githubusercontent.com/helm/charts/master/stable/minio/values.yaml</code></p>
-
-<p>values.yaml 파일에서 다음과 같이 수정한다.</p>
-
-<pre><code class="language-bash">...
-existingSecret: &quot;&quot;
-# 관리자 접속 ID/Passord인 accessKey 와 secretKey 부분을 적절하게 수정
-accessKey: &quot;AKIAIOSFODNN7EXAMPLE&quot;
-secretKey: &quot;wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY&quot;
-
-...
-# storageClass 부분의 주석을 제거하고 StorageClass를 지정한다.
-  storageClass: nfs-client
-  accessMode: ReadWriteOnce
-  size: 10Gi
-
-...
-# type을 NodePort로 변경한다.  
-service:
-  type: NodePort
-  clusterIP: ~
-  port: 9000
-  nodePort: 31311
-  # externalIPs:
-  #   - externalIp1
-</code></pre>
-
-<p>values.yaml 파일 수정이 완료되었으면 다음 명령어를 통해 minio를 배포한다.</p>
-
-<p><code>helm install --name minio -f values.yaml stable/minio</code></p>
-
-<h3 id="실행">실행</h3>
-
-<p>values.yaml 파일에 NodePort의 포트 번호가 31311 설정되었다.</p>
-
-<p>만약 배포가 잘 되었다면 31311 NodePort로 배포된 것이므로 브라우저에서 http://[node ip]:31311 로 접속해 보자.</p>
-
-<p>접속이 잘 된다면 배포가 완료된 것이다.</p>
 
 
+
+
+
+        
+            </div> 
         
         </div> 
         
-    <div id="disqus_thread"></div>
-<script type="application/javascript">
-    var disqus_config = function () {
-    
-    
-    
-    };
-    (function() {
-        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
-            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
-            return;
-        }
-        var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "gemiro" + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-
 
 
       </div>
@@ -725,7 +709,6 @@ service:
             
                 
                     
-                    
                 
                 
 
@@ -747,9 +730,6 @@ service:
             
             
                 
-                    
-                        
-                        
                     
                 
                 

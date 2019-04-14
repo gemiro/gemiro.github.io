@@ -9,7 +9,7 @@
 
     <link rel="icon" href="/images/favicon.png" type="image/png">
 
-    <title>Minio 분산 오브젝트 스토리지 구축 :: The Study Room of Min-Jae Papa</title>
+    <title>Halyard 설치 및 Kubernetes에 Spinnaker 배포 :: The Study Room of Min-Jae Papa</title>
 
     
     <link href="/css/nucleus.css?1555243129" rel="stylesheet">
@@ -34,7 +34,7 @@
     </style>
     
   </head>
-  <body class="" data-url="/kubernetes/applications/minio/">
+  <body class="" data-url="/spinnaker/halyard/">
     <nav id="sidebar" class="">
 
 
@@ -113,7 +113,7 @@
   
     
     <li data-nav-id="/kubernetes/" title="Kubernetes" class="dd-item 
-        parent
+        
         
         
         ">
@@ -188,7 +188,7 @@
   
     
     <li data-nav-id="/kubernetes/applications/" title="어플리케이션(Helm)" class="dd-item 
-        parent
+        
         
         
         ">
@@ -263,8 +263,8 @@
   
     
     <li data-nav-id="/kubernetes/applications/minio/" title="Minio 분산 오브젝트 스토리지 구축" class="dd-item 
-        parent
-        active
+        
+        
         
         ">
       <a href="/kubernetes/applications/minio/">
@@ -303,7 +303,7 @@
   
     
     <li data-nav-id="/spinnaker/" title="Spinnaker" class="dd-item 
-        
+        parent
         
         
         ">
@@ -330,8 +330,8 @@
   
     
     <li data-nav-id="/spinnaker/halyard/" title="Halyard 설치 및 Kubernetes에 Spinnaker 배포" class="dd-item 
-        
-        
+        parent
+        active
         
         ">
       <a href="/spinnaker/halyard/">
@@ -424,7 +424,7 @@
                   
                   
                   <div id="top-github-link">
-                    <a class="github-link" title='' href="https://github.com/gemiro/blog/edit/master/content/kubernetes/applications/minio/_index.md" target="blank">
+                    <a class="github-link" title='' href="https://github.com/gemiro/blog/edit/master/content/spinnaker/halyard/_index.md" target="blank">
                       <i class="fas fa-code-branch"></i>
                       <span id="top-github-link-text"></span>
                     </a>
@@ -455,13 +455,7 @@
             
           
           
-            
-            
-          
-          
-            <a href='/'>The Study Room of Min-Jae Papa</a> > <a href='/kubernetes/'>Kubernetes</a> > <a href='/kubernetes/applications/'>어플리케이션(Helm)</a> > Minio 분산 오브젝트 스토리지 구축
-          
-         
+            <a href='/'>The Study Room of Min-Jae Papa</a> > <a href='/spinnaker/'>Spinnaker</a> > Halyard 설치 및 Kubernetes에 Spinnaker 배포
           
          
           
@@ -482,8 +476,12 @@
 <ul>
 <li><a href="#소개">소개</a></li>
 <li><a href="#사전-준비">사전 준비</a></li>
-<li><a href="#설치">설치</a></li>
-<li><a href="#실행">실행</a></li>
+<li><a href="#halyard-설치하기">Halyard 설치하기</a></li>
+<li><a href="#cloud-providers-선택하기">Cloud Providers 선택하기</a></li>
+<li><a href="#환경-선택">환경 선택</a></li>
+<li><a href="#persistent-외부-스토리지-설정">Persistent 외부 스토리지 설정</a></li>
+<li><a href="#spinnaker-배포">Spinnaker 배포</a></li>
+<li><a href="#spinnaker-connect-ui">Spinnaker Connect UI</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -499,7 +497,7 @@
         
         <div id="body-inner">
           
-            <h1>Minio 분산 오브젝트 스토리지 구축</h1>
+            <h1>Halyard 설치 및 Kubernetes에 Spinnaker 배포</h1>
           
 
         
@@ -507,67 +505,226 @@
 
 
 <div style="text-align:right">
-	 <i class='fas fa-calendar'></i> 2019/04/12
+	 <i class='fas fa-calendar'></i> 2019/04/14
 </div>
 
 
 
 <h3 id="소개">소개</h3>
 
-<p><a href="https://min.io/">Minio</a>는 자신의 호스트에 직접 구축이 가능한 S3-compatible 오브젝트 스토리지이다.
-S3의 특징인 버저닝 기능등 몇몇 기능을 제외한 많은 부분의 S3 API를 Minio가 지원하고 있다.
-따라서 Minio API로 구성한 서비스들은 AWS의 S3와 잘 호환된다고 할 수 있다.</p>
+<p>Halyard는 Spinnaker deployment의 라이프사이클을 관리하기 위한 관리자 툴이다. Halyard를 통해 관리자는 Spinnaker를 배포 및 업데이트를 할 수 있으며,
+또한 다양한 외부 Provider를 연동하여 기능을 확장 할 수 있다.</p>
+
+<p>본 문에서는 Halyard를 Docker(Centos7 구성)로 설치하고 Kubernetes환경에 Spinnaker를 배포하는 방법을 소개한다.</p>
 
 <h3 id="사전-준비">사전 준비</h3>
 
 <ul>
+<li>Halyard를 설치하기 위한 Docker가 구성된 PC</li>
 <li><a href="/kubernetes/installation/">쿠버네티스 설치하기</a></li>
-<li><a href="/kubernetes/helm/">Helm 설치 및 사용</a></li>
-<li><a href="/kubernetes/applications/nfs-provider/">Kubernetes NFS Dynamic Provisioner 구축</a></li>
+<li><a href="/kubernetes/applications/minio/">Minio 분산 오브젝트 스토리지 구축</a></li>
 </ul>
 
-<h3 id="설치">설치</h3>
+<h3 id="halyard-설치하기">Halyard 설치하기</h3>
 
-<p><a href="https://github.com/helm/charts/tree/master/stable/minio">Minio helm chart</a>에서 values.yaml을 다음 명령어로 복사한다.</p>
+<ol>
+<li><p><a href="https://docs.docker.com/install/">Docker CE</a> 가 설치된 PC를 준비한다.</p></li>
 
-<p><code>wget https://raw.githubusercontent.com/helm/charts/master/stable/minio/values.yaml</code></p>
+<li><p>그리고 Halyard config 디렉토리로 사용할 디렉토리를 만든다.</p></li>
+</ol>
 
-<p>values.yaml 파일에서 다음과 같이 수정한다.</p>
+<p><code>mkdir ~/.hal</code></p>
 
-<pre><code class="language-bash">...
-existingSecret: &quot;&quot;
-# 관리자 접속 ID/Passord인 accessKey 와 secretKey 부분을 적절하게 수정
-accessKey: &quot;AKIAIOSFODNN7EXAMPLE&quot;
-secretKey: &quot;wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY&quot;
+<p><strong>.hal</strong>에 구성된 config파일은 Halayrd docker container에 Persist volume으로 구성된다.</p>
 
-...
-# storageClass 부분의 주석을 제거하고 StorageClass를 지정한다.
-  storageClass: nfs-client
-  accessMode: ReadWriteOnce
-  size: 10Gi
+<ol>
+<li>Halyard는 Spinnaker를 kubernetes에 배포할 때 kubectl 의 권한을 사용하여 배포한다.
+따라서 halayrd에게 Kubernetes의 .kube 정보를 복사해 주어야 한다.</li>
+</ol>
 
-...
-# type을 NodePort로 변경한다.  
-service:
-  type: NodePort
-  clusterIP: ~
-  port: 9000
-  nodePort: 31311
-  # externalIPs:
-  #   - externalIp1
+<p>kubernetes가 설치된 master node에서 &lsquo;~/.kube/config&rsquo; 파일을 복사하여 Halayrd를 설치할 PC로 복사한다.
+그리고 아래 디렉토리를 생성하고 복사한 config 파일을 k8s폴더에 복사한다.</p>
+
+<p><code>mkdir ~/.hal/k8s</code></p>
+
+<ol>
+<li>다음 명령을 통해 Halyard docker container를 띄운다.</li>
+</ol>
+
+<pre><code class="language-bash"> docker run  \
+   --name halyard --rm  \
+   -v ~/.hal:/home/spinnaker/.hal \
+   -v ~/.hal/k8s:/home/spinnaker/.kube \
+   -d gcr.io/spinnaker-marketplace/halyard:stable
 </code></pre>
 
-<p>values.yaml 파일 수정이 완료되었으면 다음 명령어를 통해 minio를 배포한다.</p>
+<ol>
+<li>Halyard가 정상적으로 올라갔으면 다음 명령어를 통해 Halyard로 연결한다.</li>
+</ol>
 
-<p><code>helm install --name minio -f values.yaml stable/minio</code></p>
+<p><code>docker exec -it halyard bash</code></p>
 
-<h3 id="실행">실행</h3>
+<ol>
+<li>다음 명령어는 command 완성 가이드를 활성화 한다. (편의를 위해)</li>
+</ol>
 
-<p>values.yaml 파일에 NodePort의 포트 번호가 31311 설정되었다.</p>
+<p><code>source &lt;(hal --print-bash-completion)</code></p>
 
-<p>만약 배포가 잘 되었다면 31311 NodePort로 배포된 것이므로 브라우저에서 http://[node ip]:31311 로 접속해 보자.</p>
+<p><strong>hal</strong> 명령어는 help 정보를 보여준다. <a href="https://www.spinnaker.io/reference/halyard/commands/">Halyard Command Reference</a>에서 명령어 정보를 확인할 수 있다.</p>
 
-<p>접속이 잘 된다면 배포가 완료된 것이다.</p>
+<h3 id="cloud-providers-선택하기">Cloud Providers 선택하기</h3>
+
+<p>어플리케이션을 어떤 플랫폼으로 배포할지를 선태해야 한다. Spinnaker는 다양한 <a href="https://www.spinnaker.io/setup/install/providers/#supported-providers">Providers</a>를 지원한다.
+본 문에서는 Kubernetes v2(manifest based)를 선택하여 환경을 구성한다.</p>
+
+<ol>
+<li>다음 명령어를 통해 kubernetes provider를 활성화 한다.</li>
+</ol>
+
+<p><code>hal config provider kubernetes enable</code></p>
+
+<ol>
+<li>그 다음 kubernetes account를 생성한다.</li>
+</ol>
+
+<pre><code class="language-bash">CONTEXT=$(kubectl config current-context)
+K8SACCOUNT=my-k8s-v2-account 
+#my-k8s-v2-account 계정 명 (변경 가능)
+hal config provider kubernetes account add $K8SACCOUNT \
+    --provider-version v2 \
+    --context $CONTEXT
+    
+hal config features edit --artifacts true
+</code></pre>
+
+<h3 id="환경-선택">환경 선택</h3>
+
+<p>Halyard는 <a href="https://www.spinnaker.io/setup/install/environment/#3-choose-your-environment">3가지 형태</a>로 Spinnaker를 배포할 환경을 선택할 수 있다.
+Kubernetes에 배포하기 때문에 선택은 Distributed installation 밖에 없다.</p>
+
+<p>다음 명령어를 통해 k8s account가 어떤 형태로 spinnaker를 배포시킬 것인지를 설정한다.</p>
+
+<p><code>hal config deploy edit --type distributed --account-name $K8SACCOUNT</code></p>
+
+<h3 id="persistent-외부-스토리지-설정">Persistent 외부 스토리지 설정</h3>
+
+<p>Spinnaker는 어플리케이션과 파이프라인의 설정 정보를 유지하기 위해 외부 스토리지 provider를 요구한다.</p>
+
+<p>Spinnaker에 설정할 수 있는 <a href="https://www.spinnaker.io/setup/install/storage/#supported-storage-solutions">외부 스토리지</a>를 보면 Public cloud 방식의 외부 스토리지를 지원한다.
+간단하게 local에 구축한다면 Redis를 선택할 수 있겠지만 추천하지 않는다고 하기 때문에 만약 local 환경만 갖고 구축한다면 Minio를 추천한다.</p>
+
+<p><a href="/kubernetes/applications/minio/">Minio 분산 오브젝트 스토리지 구축</a>을 통해 Minio가 설치가 되었다면
+Minio에 접근할 <a href="http://ip:9000">http://ip:9000</a> 형태의 <strong>ENDPOINT</strong>와 <strong>MINIO_ACCESS_KEY</strong>, <strong>MINIO_SECRET_KEY</strong>가 준비되었을 것이다.</p>
+
+<p>이 3개의 설정 정보가 있어야 Spinnaker에서 외부 스토리지 설정이 가능하다.</p>
+
+<p><a href="https://www.spinnaker.io/reference/halyard/commands/">Halyard Command Reference</a>를 보면 실제로 Minio 설정과 관련된 내용이 없다.
+이는 Minio가 S3-호환이기 때문에 S3 외부 스토리지 설정을 그대로 사용하기 때문이다.</p>
+
+<p>하지만 S3 설정을 그대로 사용할 수 없고 한가지 수정이 필요하다. Minio는 versioning object를 지원하지 않기 때문에
+<strong>~/.hal/$DEPLOYMENT/profiles/front50-local.yml</strong> 파일에 다음 한줄을 추가해야 한다.</p>
+
+<p><code>spinnaker.s3.versioning: false</code></p>
+
+<p><strong><em>$DEPLOYMENT는 보통 default이다. 만약 ront50-local.yaml파일이 존재하지 않으면 파일을 생성시켜 준다</em></strong></p>
+
+<p>아래 명령어를 통해 s3 storage를 설정한다.</p>
+
+<pre><code class="language-bash">echo $MINIO_SECRET_KEY | hal config storage s3 edit --endpoint $ENDPOINT \
+    --access-key-id $MINIO_ACCESS_KEY \
+    --secret-access-key # will be read on STDIN to avoid polluting your
+                        # ~/.bash_history with a secret
+                        
+hal config storage edit --type s3                        
+</code></pre>
+
+<h3 id="spinnaker-배포">Spinnaker 배포</h3>
+
+<ol>
+<li>버전 선택</li>
+</ol>
+
+<p>다음 명령어는 사용 가능한 Spinnaker version list를 보여준다.</p>
+
+<p><code>hal version list</code></p>
+
+<p>리스트 중 하나를 다음 명령어로 선택하여 설정한다.</p>
+
+<p><code>hal config version edit --version $VERSION</code></p>
+
+<ol>
+<li>Spinnaker 배포</li>
+</ol>
+
+<p><code>hal deploy apply</code></p>
+
+<h3 id="spinnaker-connect-ui">Spinnaker Connect UI</h3>
+
+<p>배포된 Spinnaker UI에 접근하기 위해서는 배포된 Kubernetes Service 부분을 edit 해주어야 한다.</p>
+
+<p>접속 방법은 NodePort를 이용하거나 LoadBalancer를 이용하는 방법이 있는데 본 문에서는 LoadBalancer를 이용한 방법을 설명한다.</p>
+
+<ol>
+<li>Kubernetes Master node에서 <code>kubectl -n spinnaker get all</code> 명령어를 통해 Spinnaker가 잘 배포 되었는지 먼저 확인한다.</li>
+</ol>
+
+<p>확인 하였으면 다음 명령어를 통해 spin-deck service를 수정한다.
+<code>kubectl edit svc spin-deck -n spinnaker</code></p>
+
+<pre><code class="language-yaml">...
+spec:
+  clusterIP: 10.109.5.185
+  externalTrafficPolicy: Cluster
+  ports:
+  - nodePort: 30530
+    port: 80 # 9000 --&gt; 80
+    protocol: TCP
+    targetPort: 9000
+  selector:
+    app: spin
+    cluster: spin-deck
+  sessionAffinity: None
+  type: LoadBalancer # ClusterIP --&gt; LoadBalancer
+...
+</code></pre>
+
+<p>할당된 IP를 확인한다. $UI_IPADDRESS</p>
+
+<p>그 다음 <code>kubectl edit svc spin-gate -n spinnaker</code>를 통해 spin-gate를 수정ㅎ나다.</p>
+
+<pre><code class="language-yaml">...
+spec:
+  clusterIP: 10.99.188.44
+  externalTrafficPolicy: Cluster
+  ports:
+  - nodePort: 30335
+    port: 80  # 9000 --&gt; 80
+    protocol: TCP
+    targetPort: 8084
+  selector:
+    app: spin
+    cluster: spin-gate
+  sessionAffinity: None
+  type: LoadBalancer  # ClusterIP --&gt; LoadBalancer
+
+...
+</code></pre>
+
+<p>할당된 IP를 확인한다. $API_IPADDRESS</p>
+
+<ol>
+<li>halyard에서 ui 접근과 api 접근에 대한 base-url를 변경한다.</li>
+</ol>
+
+<p><code>hal config security ui edit --override-base-url http://$UI_IPADDRESS</code></p>
+
+<p><code>hal config security api edit --override-base-url http://$API_IPADDRESS</code></p>
+
+<p>마지막으로 Spinnaker를 재 배포한다.</p>
+
+<p><code>hal deploy apply</code></p>
+
+<p>적용이 완료 되었으면 브라우저에서 http://$UI_IPADDRESS 으로 접속하여 Spinnaker UI가 잘 동작하는지 확인한다.</p>
 
 
         
@@ -623,57 +780,8 @@ service:
             
                 
                     
-                    
-                
-                
-
-                    
-                    
-                        
-                    
-                    
-
-                    
-                        
-            
-            
-                
-                    
                         
                         
-                    
-                
-                
-
-                    
-                    
-                    
-
-                    
-            
-        
-                    
-                        
-            
-            
-                
-                    
-                
-                
-
-                    
-                    
-                    
-
-                    
-            
-        
-                    
-                        
-            
-            
-                
-                    
                     
                 
                 
@@ -689,9 +797,6 @@ service:
             
             
                 
-                    
-                        
-                        
                     
                 
                 
@@ -725,32 +830,6 @@ service:
             
                 
                     
-                    
-                
-                
-
-                    
-                    
-                    
-
-                    
-            
-        
-                    
-            
-        
-                    
-            
-        
-                    
-                        
-            
-            
-                
-                    
-                        
-                        
-                    
                 
                 
 
@@ -777,6 +856,19 @@ service:
             
         
                     
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
             
         
                     
@@ -784,6 +876,67 @@ service:
             
             
                 
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
                     
                 
                 
