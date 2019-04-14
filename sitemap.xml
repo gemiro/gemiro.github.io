@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/spinnaker/installation/</loc>
+    <lastmod>2019-04-14T15:59:20+09:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/kubernetes/applications/metallb/</loc>
     <lastmod>2019-04-08T23:13:10+09:00</lastmod>
   </url>
@@ -10,10 +15,6 @@
   <url>
     <loc>/kubernetes/installation/</loc>
     <lastmod>2019-03-25T21:46:22+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/spinnaker/installation/</loc>
   </url>
   
   <url>
@@ -35,6 +36,11 @@
   
   <url>
     <loc>/spring-boot/</loc>
+  </url>
+  
+  <url>
+    <loc>/kubernetes/applications/minio/</loc>
+    <lastmod>2019-04-12T23:17:01+09:00</lastmod>
   </url>
   
   <url>
